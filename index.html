@@ -11,29 +11,97 @@
 </head>
 <body>
     <div id="app" class="app-container">
-        <!-- ШАПКА -->
-        <header class="header">
-            <div class="header__logo">
-                <span class="header__logo-text">Учусь.РФ</span>
+        <!-- ШАПКА (скрыта до входа) -->
+        <header class="header" id="mainHeader" style="display: none;">
+            <div class="header__left">
+                <div class="header__logo">
+                    <span class="header__logo-text">Учусь.РФ</span>
+                </div>
+                <button class="burger-btn" id="burgerBtn" aria-label="Меню">
+                    <span class="burger-line"></span>
+                    <span class="burger-line"></span>
+                    <span class="burger-line"></span>
+                </button>
             </div>
             <nav class="header__nav" id="mainNav">
-                <button class="nav-btn active" data-page="home">Главная</button>
-                <button class="nav-btn" data-page="register">Регистрация</button>
-                <button class="nav-btn" data-page="login">Вход</button>
+                <button class="nav-btn" data-page="home">Главная</button>
                 <button class="nav-btn" data-page="dashboard">Кабинет</button>
                 <button class="nav-btn" data-page="admin">Админ</button>
+                <button class="nav-btn nav-btn--logout" id="logoutBtn">Выйти</button>
             </nav>
         </header>
 
         <!-- ОСНОВНОЙ КОНТЕНТ -->
         <main class="main-content">
-            <!-- ===== ГЛАВНАЯ СТРАНИЦА ===== -->
-            <section id="page-home" class="page active">
-                <!-- Приветственный блок -->
+            <!-- ===== СТРАНИЦА ВХОДА (всегда видна, если не авторизован) ===== -->
+            <section id="page-login" class="page active">
+                <div class="login-wrapper">
+                    <div class="login-card">
+                        <h1 class="login-card__title">Учусь.РФ</h1>
+                        <p class="login-card__subtitle">Вход в систему</p>
+                        <div class="test-account-badge">
+                            <span>🔑 Тестовый аккаунт: <strong>testuser</strong> / <strong>test12345</strong></span>
+                        </div>
+                        <form id="loginForm" class="form">
+                            <div class="form__group">
+                                <label for="loginUsername">Логин</label>
+                                <input type="text" id="loginUsername" placeholder="Введите логин" value="testuser" />
+                            </div>
+                            <div class="form__group">
+                                <label for="loginPassword">Пароль</label>
+                                <input type="password" id="loginPassword" placeholder="Введите пароль" value="test12345" />
+                            </div>
+                            <span class="form__hint" id="loginHint"></span>
+                            <button type="submit" class="btn btn--primary btn--large">Войти</button>
+                        </form>
+                        <p class="form__switch">
+                            Еще не зарегистрированы? <a href="#" id="gotoRegister">Регистрация</a>
+                        </p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ===== СТРАНИЦА РЕГИСТРАЦИИ (доступна только если не авторизован) ===== -->
+            <section id="page-register" class="page">
+                <div class="card">
+                    <h2 class="card__title">Регистрация</h2>
+                    <form id="registerForm" class="form">
+                        <div class="form__group">
+                            <label for="regLogin">Логин (лат., цифры, мин. 6)</label>
+                            <input type="text" id="regLogin" placeholder="например: user2026" />
+                            <span class="form__hint" id="regLoginHint"></span>
+                        </div>
+                        <div class="form__group">
+                            <label for="regPassword">Пароль (мин. 8 символов)</label>
+                            <input type="password" id="regPassword" placeholder="••••••••" />
+                            <span class="form__hint" id="regPasswordHint"></span>
+                        </div>
+                        <div class="form__group">
+                            <label for="regFullname">ФИО</label>
+                            <input type="text" id="regFullname" placeholder="Иванов Иван Иванович" />
+                        </div>
+                        <div class="form__group">
+                            <label for="regPhone">Контактный телефон</label>
+                            <input type="tel" id="regPhone" placeholder="+7 (999) 123-45-67" />
+                        </div>
+                        <div class="form__group">
+                            <label for="regEmail">E-mail</label>
+                            <input type="email" id="regEmail" placeholder="user@example.ru" />
+                        </div>
+                        <button type="submit" class="btn btn--primary">Зарегистрироваться</button>
+                    </form>
+                    <p class="form__switch">
+                        Уже есть аккаунт? <a href="#" id="gotoLoginFromRegister">Войти</a>
+                    </p>
+                </div>
+            </section>
+
+            <!-- ===== ГЛАВНАЯ СТРАНИЦА (доступна только после входа) ===== -->
+            <section id="page-home" class="page">
                 <div class="hero">
                     <h1 class="hero__title">Запись на онлайн-курсы</h1>
                     <p class="hero__subtitle">Повышение квалификации, переподготовка, охрана труда</p>
-                    <div id="userGreeting" class="user-greeting" style="display: none;">
+                    <div id="userGreeting" class="user-greeting">
                         <span id="greetingText"></span>
                     </div>
                 </div>
@@ -100,67 +168,7 @@
                 </div>
             </section>
 
-            <!-- Страница регистрации -->
-            <section id="page-register" class="page">
-                <div class="card">
-                    <h2 class="card__title">Регистрация</h2>
-                    <form id="registerForm" class="form">
-                        <div class="form__group">
-                            <label for="regLogin">Логин (лат., цифры, мин. 6)</label>
-                            <input type="text" id="regLogin" placeholder="например: user2026" />
-                            <span class="form__hint" id="regLoginHint"></span>
-                        </div>
-                        <div class="form__group">
-                            <label for="regPassword">Пароль (мин. 8 символов)</label>
-                            <input type="password" id="regPassword" placeholder="••••••••" />
-                            <span class="form__hint" id="regPasswordHint"></span>
-                        </div>
-                        <div class="form__group">
-                            <label for="regFullname">ФИО</label>
-                            <input type="text" id="regFullname" placeholder="Иванов Иван Иванович" />
-                        </div>
-                        <div class="form__group">
-                            <label for="regPhone">Контактный телефон</label>
-                            <input type="tel" id="regPhone" placeholder="+7 (999) 123-45-67" />
-                        </div>
-                        <div class="form__group">
-                            <label for="regEmail">E-mail</label>
-                            <input type="email" id="regEmail" placeholder="user@example.ru" />
-                        </div>
-                        <button type="submit" class="btn btn--primary">Зарегистрироваться</button>
-                    </form>
-                    <p class="form__switch">
-                        Уже есть аккаунт? <a href="#" id="gotoLoginFromRegister">Войти</a>
-                    </p>
-                </div>
-            </section>
-
-            <!-- Страница входа -->
-            <section id="page-login" class="page">
-                <div class="card">
-                    <h2 class="card__title">Вход в систему</h2>
-                    <div class="test-account-badge">
-                        <span>🔑 Тестовый аккаунт: <strong>testuser</strong> / <strong>test12345</strong></span>
-                    </div>
-                    <form id="loginForm" class="form">
-                        <div class="form__group">
-                            <label for="loginUsername">Логин</label>
-                            <input type="text" id="loginUsername" placeholder="Введите логин" value="testuser" />
-                            <span class="form__hint" id="loginHint"></span>
-                        </div>
-                        <div class="form__group">
-                            <label for="loginPassword">Пароль</label>
-                            <input type="password" id="loginPassword" placeholder="Введите пароль" value="test12345" />
-                        </div>
-                        <button type="submit" class="btn btn--primary">Войти</button>
-                    </form>
-                    <p class="form__switch">
-                        Еще не зарегистрированы? <a href="#" id="gotoRegisterFromLogin">Регистрация</a>
-                    </p>
-                </div>
-            </section>
-
-            <!-- Личный кабинет -->
+            <!-- Личный кабинет (доступен только после входа) -->
             <section id="page-dashboard" class="page">
                 <div class="card">
                     <h2 class="card__title">Личный кабинет</h2>
@@ -170,7 +178,7 @@
                 </div>
             </section>
 
-            <!-- Панель администратора -->
+            <!-- Панель администратора (доступна только после входа) -->
             <section id="page-admin" class="page">
                 <div class="card">
                     <h2 class="card__title">Панель администратора</h2>

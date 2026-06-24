@@ -1,4 +1,4 @@
-// script.js — с перенаправлением на главную после входа
+// script.js — с ограничением доступа до входа
 
 document.addEventListener('DOMContentLoaded', () => {
     // Данные
@@ -24,29 +24,79 @@ document.addEventListener('DOMContentLoaded', () => {
     function saveApps() { localStorage.setItem('applications', JSON.stringify(applications)); }
     function saveReviews() { localStorage.setItem('reviews', JSON.stringify(reviews)); }
 
-    // === ОБНОВЛЕНИЕ ПРИВЕТСТВИЯ НА ГЛАВНОЙ ===
-    function updateGreeting() {
-        const greetingBlock = document.getElementById('userGreeting');
-        const greetingText = document.getElementById('greetingText');
+    // === ЭЛЕМЕНТЫ ===
+    const header = document.getElementById('mainHeader');
+    const burgerBtn = document.getElementById('burgerBtn');
+    const mainNav = document.getElementById('mainNav');
+    const logoutBtn = document.getElementById('logoutBtn');
+
+    // === УПРАВЛЕНИЕ ДОСТУПОМ ===
+    function updateAuthUI() {
         if (currentUser) {
-            greetingBlock.style.display = 'inline-block';
-            greetingText.textContent = `👋 Добро пожаловать, ${currentUser.fullname}!`;
+            header.style.display = 'flex';
+            // Показываем только авторизованные страницы
+            document.querySelectorAll('.nav-btn:not(.nav-btn--logout)').forEach(btn => {
+                btn.style.display = 'inline-block';
+            });
+            // Скрываем страницу входа и регистрации
+            document.getElementById('page-login').classList.remove('active');
+            document.getElementById('page-register').classList.remove('active');
+            // Показываем главную
+            showPage('home');
+            updateGreeting();
         } else {
-            greetingBlock.style.display = 'none';
+            header.style.display = 'none';
+            // Показываем только страницу входа
+            document.getElementById('page-login').classList.add('active');
+            document.getElementById('page-register').classList.remove('active');
+            document.getElementById('page-home').classList.remove('active');
+            document.getElementById('page-dashboard').classList.remove('active');
+            document.getElementById('page-admin').classList.remove('active');
+            // Сбрасываем активные кнопки
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
         }
     }
 
-    // Навигация
-    const navBtns = document.querySelectorAll('.nav-btn');
+    // === БУРГЕР-МЕНЮ ===
+    burgerBtn.addEventListener('click', () => {
+        burgerBtn.classList.toggle('active');
+        mainNav.classList.toggle('open');
+    });
+
+    document.querySelectorAll('.nav-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            burgerBtn.classList.remove('active');
+            mainNav.classList.remove('open');
+        });
+    });
+
+    document.addEventListener('click', (e) => {
+        if (!e.target.closest('.header')) {
+            burgerBtn.classList.remove('active');
+            mainNav.classList.remove('open');
+        }
+    });
+
+    // === ОБНОВЛЕНИЕ ПРИВЕТСТВИЯ ===
+    function updateGreeting() {
+        const greetingText = document.getElementById('greetingText');
+        if (currentUser) {
+            greetingText.textContent = `👋 Добро пожаловать, ${currentUser.fullname}!`;
+        }
+    }
+
+    // === НАВИГАЦИЯ ===
+    const navBtns = document.querySelectorAll('.nav-btn:not(.nav-btn--logout)');
     const pages = {
         home: document.getElementById('page-home'),
-        register: document.getElementById('page-register'),
-        login: document.getElementById('page-login'),
         dashboard: document.getElementById('page-dashboard'),
         admin: document.getElementById('page-admin')
     };
 
     function showPage(pageId) {
+        if (!currentUser) return;
         Object.keys(pages).forEach(id => {
             pages[id].classList.toggle('active', id === pageId);
         });
@@ -55,24 +105,49 @@ document.addEventListener('DOMContentLoaded', () => {
         });
         if (pageId === 'dashboard') renderDashboard();
         if (pageId === 'admin') renderAdminPanel();
-        if (pageId === 'home') updateGreeting();
         window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
     navBtns.forEach(btn => {
         btn.addEventListener('click', () => {
-            showPage(btn.dataset.page);
+            if (currentUser) {
+                showPage(btn.dataset.page);
+            }
         });
     });
 
-    document.getElementById('gotoLoginFromRegister').addEventListener('click', (e) => {
-        e.preventDefault(); showPage('login');
-    });
-    document.getElementById('gotoRegisterFromLogin').addEventListener('click', (e) => {
-        e.preventDefault(); showPage('register');
+    // === ВЫХОД ===
+    logoutBtn.addEventListener('click', () => {
+        currentUser = null;
+        isAdmin = false;
+        sessionStorage.removeItem('currentUser');
+        sessionStorage.removeItem('isAdmin');
+        updateAuthUI();
+        // Показываем только страницу входа
+        document.getElementById('page-login').classList.add('active');
+        document.getElementById('loginHint').textContent = '';
+        // Очищаем поля
+        document.getElementById('loginUsername').value = 'testuser';
+        document.getElementById('loginPassword').value = 'test12345';
     });
 
-    // === СЛАЙДЕР (главный) ===
+    // === ПЕРЕКЛЮЧЕНИЕ МЕЖДУ ВХОДОМ И РЕГИСТРАЦИЕЙ ===
+    document.getElementById('gotoRegister').addEventListener('click', (e) => {
+        e.preventDefault();
+        if (!currentUser) {
+            document.getElementById('page-login').classList.remove('active');
+            document.getElementById('page-register').classList.add('active');
+        }
+    });
+    document.getElementById('gotoLoginFromRegister').addEventListener('click', (e) => {
+        e.preventDefault();
+        if (!currentUser) {
+            document.getElementById('page-register').classList.remove('active');
+            document.getElementById('page-login').classList.add('active');
+        }
+    });
+
+    // === СЛАЙДЕР ===
     let mainSlideIndex = 0;
     const mainTrack = document.getElementById('sliderTrack');
     const mainSlides = mainTrack ? mainTrack.querySelectorAll('.slider__slide') : [];
@@ -165,7 +240,8 @@ document.addEventListener('DOMContentLoaded', () => {
         users.push({ login, password, fullname, phone, email });
         saveUsers();
         alert('Регистрация успешна! Теперь войдите.');
-        showPage('login');
+        document.getElementById('page-register').classList.remove('active');
+        document.getElementById('page-login').classList.add('active');
         document.getElementById('regLogin').value = '';
         document.getElementById('regPassword').value = '';
         document.getElementById('regFullname').value = '';
@@ -173,7 +249,7 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('regEmail').value = '';
     });
 
-    // === ВХОД (перенаправление на главную) ===
+    // === ВХОД ===
     const loginForm = document.getElementById('loginForm');
     const loginHint = document.getElementById('loginHint');
 
@@ -188,9 +264,7 @@ document.addEventListener('DOMContentLoaded', () => {
             sessionStorage.setItem('currentUser', JSON.stringify(user));
             loginHint.textContent = '';
             alert('Добро пожаловать, ' + user.fullname);
-            // ПЕРЕНАПРАВЛЕНИЕ НА ГЛАВНУЮ
-            showPage('home');
-            updateGreeting();
+            updateAuthUI();
         } else {
             loginHint.textContent = 'Неверный логин или пароль.';
         }
@@ -199,12 +273,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // === ЛИЧНЫЙ КАБИНЕТ ===
     function renderDashboard() {
         const container = document.getElementById('dashboardContent');
-        if (!currentUser) {
-            container.innerHTML = `
-                <p>Пожалуйста, <a href="#" onclick="showPage('login')">войдите</a> в систему.</p>
-            `;
-            return;
-        }
+        if (!currentUser) return;
         const userApps = applications.filter(a => a.userLogin === currentUser.login);
         
         let historyHtml = '<h3>История заявок</h3>';
@@ -303,6 +372,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
     adminLoginForm.addEventListener('submit', (e) => {
         e.preventDefault();
+        if (!currentUser) {
+            alert('Сначала войдите в систему');
+            return;
+        }
         const user = document.getElementById('adminUser').value.trim();
         const pass = document.getElementById('adminPass').value.trim();
         if (user === 'Admin26' && pass === 'Demo20') {
@@ -390,15 +463,19 @@ document.addEventListener('DOMContentLoaded', () => {
         renderAdminList(filtered);
     }
 
-    if (isAdmin) {
-        adminStatus.textContent = '✅ Администратор вошёл';
-        adminPanel.style.display = 'block';
-        renderAdminPanel();
+    // === ИНИЦИАЛИЗАЦИЯ ===
+    // Проверяем, авторизован ли пользователь при загрузке
+    if (currentUser) {
+        updateAuthUI();
+    } else {
+        // Показываем только страницу входа
+        document.getElementById('page-login').classList.add('active');
+        document.getElementById('page-register').classList.remove('active');
+        document.getElementById('page-home').classList.remove('active');
+        document.getElementById('page-dashboard').classList.remove('active');
+        document.getElementById('page-admin').classList.remove('active');
+        header.style.display = 'none';
     }
-
-    // Стартовая страница — ГЛАВНАЯ
-    showPage('home');
-    updateGreeting();
 
     window.showPage = showPage;
 });
