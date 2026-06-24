@@ -33,6 +33,9 @@
                 <div class="hero">
                     <h1 class="hero__title">Запись на онлайн-курсы</h1>
                     <p class="hero__subtitle">Повышение квалификации, переподготовка, охрана труда</p>
+                    <div id="userGreeting" class="user-greeting" style="display: none;">
+                        <span id="greetingText"></span>
+                    </div>
                 </div>
 
                 <!-- СЛАЙДЕР -->
@@ -51,7 +54,23 @@
                     <div class="slider__dots" id="sliderDots"></div>
                 </div>
 
-                <!-- ФОРМА ОФОРМЛЕНИЯ ЗАЯВКИ НА ГЛАВНОЙ -->
+                <!-- Карточки с курсами -->
+                <div class="course-grid">
+                    <div class="course-card">
+                        <h3>Повышение квалификации</h3>
+                        <p>Актуализация знаний и навыков по вашей специальности</p>
+                    </div>
+                    <div class="course-card">
+                        <h3>Курс переподготовки</h3>
+                        <p>Получение новой профессии с выдачей диплома</p>
+                    </div>
+                    <div class="course-card">
+                        <h3>Курс по охране труда</h3>
+                        <p>Обучение требованиям безопасности на производстве</p>
+                    </div>
+                </div>
+
+                <!-- ФОРМА ОФОРМЛЕНИЯ ЗАЯВКИ -->
                 <div class="home-application-form">
                     <h2 class="home-application-form__title">Оформить заявку на курс</h2>
                     <form id="homeApplicationForm" class="form">
@@ -76,7 +95,7 @@
                             </select>
                         </div>
                         <button type="submit" class="btn btn--primary btn--large">Отправить заявку</button>
-                        <p class="form__hint" id="homeAppHint"></p>
+                        <span class="form__hint" id="homeAppHint"></span>
                     </form>
                 </div>
             </section>
@@ -120,15 +139,18 @@
             <section id="page-login" class="page">
                 <div class="card">
                     <h2 class="card__title">Вход в систему</h2>
+                    <div class="test-account-badge">
+                        <span>🔑 Тестовый аккаунт: <strong>testuser</strong> / <strong>test12345</strong></span>
+                    </div>
                     <form id="loginForm" class="form">
                         <div class="form__group">
                             <label for="loginUsername">Логин</label>
-                            <input type="text" id="loginUsername" placeholder="Введите логин" />
+                            <input type="text" id="loginUsername" placeholder="Введите логин" value="testuser" />
                             <span class="form__hint" id="loginHint"></span>
                         </div>
                         <div class="form__group">
                             <label for="loginPassword">Пароль</label>
-                            <input type="password" id="loginPassword" placeholder="Введите пароль" />
+                            <input type="password" id="loginPassword" placeholder="Введите пароль" value="test12345" />
                         </div>
                         <button type="submit" class="btn btn--primary">Войти</button>
                     </form>
@@ -142,38 +164,9 @@
             <section id="page-dashboard" class="page">
                 <div class="card">
                     <h2 class="card__title">Личный кабинет</h2>
-                    <div class="slider-container">
-                        <div class="slider" id="dashboardSlider">
-                            <div class="slider__track" id="dashboardSliderTrack">
-                                <div class="slider__slide"><img src="https://via.placeholder.com/400x150/0d47a1/ffffff?text=Ваши+курсы" alt="Ваши курсы" /></div>
-                                <div class="slider__slide"><img src="https://via.placeholder.com/400x150/007bff/ffffff?text=Обучение" alt="Обучение" /></div>
-                                <div class="slider__slide"><img src="https://via.placeholder.com/400x150/0d47a1/ffffff?text=Сертификаты" alt="Сертификаты" /></div>
-                                <div class="slider__slide"><img src="https://via.placeholder.com/400x150/007bff/ffffff?text=Поддержка" alt="Поддержка" /></div>
-                            </div>
-                            <button class="slider__btn slider__btn--prev" id="dashboardSliderPrev">‹</button>
-                            <button class="slider__btn slider__btn--next" id="dashboardSliderNext">›</button>
-                        </div>
+                    <div id="dashboardContent">
+                        <!-- Содержимое заполняется через JS -->
                     </div>
-
-                    <h3>История заявок</h3>
-                    <div id="applicationsHistory" class="history-list">
-                        <p class="history-empty">У вас пока нет заявок.</p>
-                    </div>
-
-                    <h3>Оставить отзыв</h3>
-                    <form id="reviewForm" class="form">
-                        <div class="form__group">
-                            <label for="reviewSelect">Выберите завершённую заявку</label>
-                            <select id="reviewSelect" class="form__select">
-                                <option value="">— нет завершённых —</option>
-                            </select>
-                        </div>
-                        <div class="form__group">
-                            <label for="reviewText">Ваш отзыв</label>
-                            <textarea id="reviewText" rows="2" placeholder="Поделитесь впечатлениями..."></textarea>
-                        </div>
-                        <button type="submit" class="btn btn--secondary">Отправить отзыв</button>
-                    </form>
                 </div>
             </section>
 
@@ -185,11 +178,11 @@
                     <form id="adminLoginForm" class="form form--inline">
                         <div class="form__group">
                             <label for="adminUser">Логин</label>
-                            <input type="text" id="adminUser" placeholder="Admin26" />
+                            <input type="text" id="adminUser" placeholder="Admin26" value="Admin26" />
                         </div>
                         <div class="form__group">
                             <label for="adminPass">Пароль</label>
-                            <input type="password" id="adminPass" placeholder="Demo20" />
+                            <input type="password" id="adminPass" placeholder="Demo20" value="Demo20" />
                         </div>
                         <button type="submit" class="btn btn--primary">Войти как админ</button>
                     </form>

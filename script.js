@@ -1,4 +1,4 @@
-// script.js — обновлён с формой заявки на главной
+// script.js — с перенаправлением на главную после входа
 
 document.addEventListener('DOMContentLoaded', () => {
     // Данные
@@ -8,9 +8,33 @@ document.addEventListener('DOMContentLoaded', () => {
     let currentUser = JSON.parse(sessionStorage.getItem('currentUser')) || null;
     let isAdmin = sessionStorage.getItem('isAdmin') === 'true';
 
+    // === СОЗДАНИЕ ТЕСТОВОГО АККАУНТА ===
+    if (!users.find(u => u.login === 'testuser')) {
+        users.push({
+            login: 'testuser',
+            password: 'test12345',
+            fullname: 'Тестовый Пользователь',
+            phone: '+7 (999) 888-77-66',
+            email: 'test@example.ru'
+        });
+        saveUsers();
+    }
+
     function saveUsers() { localStorage.setItem('users', JSON.stringify(users)); }
     function saveApps() { localStorage.setItem('applications', JSON.stringify(applications)); }
     function saveReviews() { localStorage.setItem('reviews', JSON.stringify(reviews)); }
+
+    // === ОБНОВЛЕНИЕ ПРИВЕТСТВИЯ НА ГЛАВНОЙ ===
+    function updateGreeting() {
+        const greetingBlock = document.getElementById('userGreeting');
+        const greetingText = document.getElementById('greetingText');
+        if (currentUser) {
+            greetingBlock.style.display = 'inline-block';
+            greetingText.textContent = `👋 Добро пожаловать, ${currentUser.fullname}!`;
+        } else {
+            greetingBlock.style.display = 'none';
+        }
+    }
 
     // Навигация
     const navBtns = document.querySelectorAll('.nav-btn');
@@ -31,6 +55,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
         if (pageId === 'dashboard') renderDashboard();
         if (pageId === 'admin') renderAdminPanel();
+        if (pageId === 'home') updateGreeting();
         window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
@@ -103,35 +128,6 @@ document.addEventListener('DOMContentLoaded', () => {
         setInterval(nextMainSlide, 4000);
     }
 
-    // === СЛАЙДЕР (личный кабинет) ===
-    let dashSlideIndex = 0;
-    const dashTrack = document.getElementById('dashboardSliderTrack');
-    const dashSlides = dashTrack ? dashTrack.querySelectorAll('.slider__slide') : [];
-    const dashTotal = dashSlides.length;
-
-    function updateDashSlider() {
-        if (!dashTrack) return;
-        dashTrack.style.transform = `translateX(-${dashSlideIndex * 100}%)`;
-    }
-
-    function nextDashSlide() {
-        if (dashTotal === 0) return;
-        dashSlideIndex = (dashSlideIndex + 1) % dashTotal;
-        updateDashSlider();
-    }
-
-    function prevDashSlide() {
-        if (dashTotal === 0) return;
-        dashSlideIndex = (dashSlideIndex - 1 + dashTotal) % dashTotal;
-        updateDashSlider();
-    }
-
-    if (document.getElementById('dashboardSliderNext')) {
-        document.getElementById('dashboardSliderNext').addEventListener('click', nextDashSlide);
-        document.getElementById('dashboardSliderPrev').addEventListener('click', prevDashSlide);
-        setInterval(nextDashSlide, 3000);
-    }
-
     // === РЕГИСТРАЦИЯ ===
     const registerForm = document.getElementById('registerForm');
     const regLoginHint = document.getElementById('regLoginHint');
@@ -172,9 +168,12 @@ document.addEventListener('DOMContentLoaded', () => {
         showPage('login');
         document.getElementById('regLogin').value = '';
         document.getElementById('regPassword').value = '';
+        document.getElementById('regFullname').value = '';
+        document.getElementById('regPhone').value = '';
+        document.getElementById('regEmail').value = '';
     });
 
-    // === ВХОД ===
+    // === ВХОД (перенаправление на главную) ===
     const loginForm = document.getElementById('loginForm');
     const loginHint = document.getElementById('loginHint');
 
@@ -189,8 +188,9 @@ document.addEventListener('DOMContentLoaded', () => {
             sessionStorage.setItem('currentUser', JSON.stringify(user));
             loginHint.textContent = '';
             alert('Добро пожаловать, ' + user.fullname);
-            showPage('dashboard');
-            renderDashboard();
+            // ПЕРЕНАПРАВЛЕНИЕ НА ГЛАВНУЮ
+            showPage('home');
+            updateGreeting();
         } else {
             loginHint.textContent = 'Неверный логин или пароль.';
         }
@@ -198,53 +198,69 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // === ЛИЧНЫЙ КАБИНЕТ ===
     function renderDashboard() {
+        const container = document.getElementById('dashboardContent');
         if (!currentUser) {
-            document.querySelector('#page-dashboard .card').innerHTML = `
-                <h2 class="card__title">Личный кабинет</h2>
-                <p>Пожалуйста, <a href="#" onclick="showPage('login')">войдите</a>.</p>
+            container.innerHTML = `
+                <p>Пожалуйста, <a href="#" onclick="showPage('login')">войдите</a> в систему.</p>
             `;
             return;
         }
         const userApps = applications.filter(a => a.userLogin === currentUser.login);
-        const historyDiv = document.getElementById('applicationsHistory');
+        
+        let historyHtml = '<h3>История заявок</h3>';
         if (userApps.length === 0) {
-            historyDiv.innerHTML = '<p class="history-empty">У вас пока нет заявок.</p>';
+            historyHtml += '<div class="history-list"><p class="history-empty">У вас пока нет заявок.</p></div>';
         } else {
-            historyDiv.innerHTML = userApps.map(a =>
+            historyHtml += '<div class="history-list">';
+            historyHtml += userApps.map(a =>
                 `<div class="history-item"><span>${a.course}</span><span>${a.date} | ${a.status}</span></div>`
             ).join('');
+            historyHtml += '</div>';
         }
 
-        const reviewSelect = document.getElementById('reviewSelect');
         const completedApps = userApps.filter(a => a.status === 'Обучение завершено');
-        reviewSelect.innerHTML = '<option value="">— выберите заявку —</option>';
-        completedApps.forEach((a, idx) => {
-            const opt = document.createElement('option');
-            opt.value = idx;
-            opt.textContent = `${a.course} (${a.date})`;
-            reviewSelect.appendChild(opt);
+        let reviewHtml = '<h3>Оставить отзыв</h3>';
+        reviewHtml += `<form id="reviewForm" class="form">
+            <div class="form__group">
+                <label for="reviewSelect">Выберите завершённую заявку</label>
+                <select id="reviewSelect" class="form__select">`;
+        if (completedApps.length === 0) {
+            reviewHtml += '<option value="">— нет завершённых —</option>';
+        } else {
+            completedApps.forEach((a, idx) => {
+                reviewHtml += `<option value="${idx}">${a.course} (${a.date})</option>`;
+            });
+        }
+        reviewHtml += `</select>
+            </div>
+            <div class="form__group">
+                <label for="reviewText">Ваш отзыв</label>
+                <textarea id="reviewText" rows="2" placeholder="Поделитесь впечатлениями..."></textarea>
+            </div>
+            <button type="submit" class="btn btn--secondary">Отправить отзыв</button>
+        </form>`;
+
+        container.innerHTML = historyHtml + reviewHtml;
+
+        document.getElementById('reviewForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            if (!currentUser) { alert('Войдите в систему'); return; }
+            const select = document.getElementById('reviewSelect');
+            const text = document.getElementById('reviewText').value.trim();
+            if (select.value === '') { alert('Выберите завершённую заявку'); return; }
+            if (!text) { alert('Напишите текст отзыва'); return; }
+
+            const userApps2 = applications.filter(a => a.userLogin === currentUser.login);
+            const idx = parseInt(select.value);
+            const app = userApps2[idx];
+            if (!app) return;
+
+            reviews.push({ user: currentUser.login, course: app.course, text, date: new Date().toLocaleDateString() });
+            saveReviews();
+            alert('Спасибо за отзыв!');
+            document.getElementById('reviewText').value = '';
         });
     }
-
-    // === ОТЗЫВЫ ===
-    document.getElementById('reviewForm').addEventListener('submit', (e) => {
-        e.preventDefault();
-        if (!currentUser) { alert('Войдите в систему'); return; }
-        const select = document.getElementById('reviewSelect');
-        const text = document.getElementById('reviewText').value.trim();
-        if (select.value === '') { alert('Выберите завершённую заявку'); return; }
-        if (!text) { alert('Напишите текст отзыва'); return; }
-
-        const userApps = applications.filter(a => a.userLogin === currentUser.login);
-        const idx = parseInt(select.value);
-        const app = userApps[idx];
-        if (!app) return;
-
-        reviews.push({ user: currentUser.login, course: app.course, text, date: new Date().toLocaleDateString() });
-        saveReviews();
-        alert('Спасибо за отзыв!');
-        document.getElementById('reviewText').value = '';
-    });
 
     // === ФОРМА ЗАЯВКИ НА ГЛАВНОЙ ===
     document.getElementById('homeApplicationForm').addEventListener('submit', (e) => {
@@ -382,6 +398,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Стартовая страница — ГЛАВНАЯ
     showPage('home');
+    updateGreeting();
 
     window.showPage = showPage;
 });
