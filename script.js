@@ -1,4 +1,4 @@
-// script.js — с ограничением доступа до входа
+// script.js — с обновлённым футером (без изменений в логике)
 
 document.addEventListener('DOMContentLoaded', () => {
     // Данные
@@ -34,25 +34,20 @@ document.addEventListener('DOMContentLoaded', () => {
     function updateAuthUI() {
         if (currentUser) {
             header.style.display = 'flex';
-            // Показываем только авторизованные страницы
             document.querySelectorAll('.nav-btn:not(.nav-btn--logout)').forEach(btn => {
                 btn.style.display = 'inline-block';
             });
-            // Скрываем страницу входа и регистрации
             document.getElementById('page-login').classList.remove('active');
             document.getElementById('page-register').classList.remove('active');
-            // Показываем главную
             showPage('home');
             updateGreeting();
         } else {
             header.style.display = 'none';
-            // Показываем только страницу входа
             document.getElementById('page-login').classList.add('active');
             document.getElementById('page-register').classList.remove('active');
             document.getElementById('page-home').classList.remove('active');
             document.getElementById('page-dashboard').classList.remove('active');
             document.getElementById('page-admin').classList.remove('active');
-            // Сбрасываем активные кнопки
             document.querySelectorAll('.nav-btn').forEach(btn => {
                 btn.classList.remove('active');
             });
@@ -123,10 +118,8 @@ document.addEventListener('DOMContentLoaded', () => {
         sessionStorage.removeItem('currentUser');
         sessionStorage.removeItem('isAdmin');
         updateAuthUI();
-        // Показываем только страницу входа
         document.getElementById('page-login').classList.add('active');
         document.getElementById('loginHint').textContent = '';
-        // Очищаем поля
         document.getElementById('loginUsername').value = 'testuser';
         document.getElementById('loginPassword').value = 'test12345';
     });
@@ -464,11 +457,9 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // === ИНИЦИАЛИЗАЦИЯ ===
-    // Проверяем, авторизован ли пользователь при загрузке
     if (currentUser) {
         updateAuthUI();
     } else {
-        // Показываем только страницу входа
         document.getElementById('page-login').classList.add('active');
         document.getElementById('page-register').classList.remove('active');
         document.getElementById('page-home').classList.remove('active');
