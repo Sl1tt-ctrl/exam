@@ -1,4 +1,4 @@
-/* style.css — с блоком профиля в личном кабинете */
+/* style.css — с обновлённым профилем и админ-панелью */
 
 * {
     margin: 0;
@@ -204,12 +204,19 @@ body {
     flex-shrink: 0;
     width: 80px;
     height: 80px;
+    background: linear-gradient(135deg, #007bff, #0d47a1);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #ffffff;
+    font-weight: 700;
+    font-size: 28px;
+    box-shadow: 0 4px 12px rgba(0, 123, 255, 0.3);
 }
 
-.profile-avatar__icon {
-    width: 100%;
-    height: 100%;
-    border-radius: 50%;
+.profile-avatar__initials {
+    text-transform: uppercase;
 }
 
 .profile-info {
@@ -232,6 +239,30 @@ body {
 .profile-phone {
     font-size: 14px;
     color: #495057;
+}
+
+/* ===== АДМИН-ПАНЕЛЬ ===== */
+.admin-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-bottom: 12px;
+}
+
+.admin-login-status {
+    font-weight: 500;
+    margin-bottom: 0;
+}
+
+.btn--danger {
+    background: #dc3545;
+    color: #ffffff;
+}
+.btn--danger:hover {
+    background: #c82333;
+    transform: translateY(-2px);
 }
 
 /* ===== ГЛАВНАЯ СТРАНИЦА ===== */
@@ -536,6 +567,14 @@ body {
     padding: 16px 36px;
     font-size: 18px;
 }
+.btn--danger {
+    background: #dc3545;
+    color: #ffffff;
+}
+.btn--danger:hover {
+    background: #c82333;
+    transform: translateY(-2px);
+}
 
 /* ИСТОРИЯ ЗАЯВОК */
 .history-list {
@@ -749,9 +788,15 @@ body {
     .profile-avatar {
         width: 64px;
         height: 64px;
+        font-size: 22px;
     }
     .profile-name {
         font-size: 18px;
+    }
+    .admin-header {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 8px;
     }
 }
 
@@ -796,6 +841,7 @@ body {
     .profile-avatar {
         width: 56px;
         height: 56px;
+        font-size: 18px;
     }
     .profile-name {
         font-size: 16px;

@@ -1,4 +1,4 @@
-// script.js — с отображением профиля в личном кабинете
+// script.js — с выходом из админ-панели
 
 document.addEventListener('DOMContentLoaded', () => {
     // Данные
@@ -29,6 +29,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const burgerBtn = document.getElementById('burgerBtn');
     const mainNav = document.getElementById('mainNav');
     const logoutBtn = document.getElementById('logoutBtn');
+    const adminLogoutBtn = document.getElementById('adminLogoutBtn');
 
     // === УПРАВЛЕНИЕ ДОСТУПОМ ===
     function updateAuthUI() {
@@ -42,6 +43,7 @@ document.addEventListener('DOMContentLoaded', () => {
             showPage('home');
             updateGreeting();
             updateProfile();
+            updateAdminUI();
         } else {
             header.style.display = 'none';
             document.getElementById('page-login').classList.add('active');
@@ -58,10 +60,44 @@ document.addEventListener('DOMContentLoaded', () => {
     // === ОБНОВЛЕНИЕ ПРОФИЛЯ В ЛИЧНОМ КАБИНЕТЕ ===
     function updateProfile() {
         if (!currentUser) return;
+        const initials = currentUser.fullname
+            .split(' ')
+            .map(word => word[0])
+            .join('')
+            .substring(0, 2)
+            .toUpperCase();
+        document.getElementById('avatarInitials').textContent = initials || '?';
         document.getElementById('profileName').textContent = currentUser.fullname || 'Имя не указано';
         document.getElementById('profileEmail').textContent = currentUser.email || 'email@example.com';
         document.getElementById('profilePhone').textContent = currentUser.phone || '+7 (999) 123-45-67';
     }
+
+    // === УПРАВЛЕНИЕ АДМИН-ИНТЕРФЕЙСОМ ===
+    function updateAdminUI() {
+        const adminStatus = document.getElementById('adminStatus');
+        const adminPanel = document.getElementById('adminPanel');
+        const adminLoginForm = document.getElementById('adminLoginForm');
+        if (isAdmin) {
+            adminStatus.textContent = '✅ Администратор вошёл';
+            adminPanel.style.display = 'block';
+            adminLoginForm.style.display = 'none';
+            adminLogoutBtn.style.display = 'inline-block';
+            renderAdminPanel();
+        } else {
+            adminStatus.textContent = 'Вход не выполнен';
+            adminPanel.style.display = 'none';
+            adminLoginForm.style.display = 'flex';
+            adminLogoutBtn.style.display = 'none';
+        }
+    }
+
+    // === ВЫХОД ИЗ АДМИН-ПАНЕЛИ ===
+    adminLogoutBtn.addEventListener('click', () => {
+        isAdmin = false;
+        sessionStorage.removeItem('isAdmin');
+        updateAdminUI();
+        alert('Вы вышли из админ-панели');
+    });
 
     // === БУРГЕР-МЕНЮ ===
     burgerBtn.addEventListener('click', () => {
@@ -111,7 +147,9 @@ document.addEventListener('DOMContentLoaded', () => {
             updateProfile();
             renderDashboard();
         }
-        if (pageId === 'admin') renderAdminPanel();
+        if (pageId === 'admin') {
+            updateAdminUI();
+        }
         window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
@@ -387,9 +425,8 @@ document.addEventListener('DOMContentLoaded', () => {
         if (user === 'Admin26' && pass === 'Demo20') {
             isAdmin = true;
             sessionStorage.setItem('isAdmin', 'true');
-            adminStatus.textContent = '✅ Администратор вошёл';
-            adminPanel.style.display = 'block';
-            renderAdminPanel();
+            updateAdminUI();
+            alert('✅ Вы вошли в админ-панель');
         } else {
             adminStatus.textContent = '❌ Неверный логин или пароль админа.';
         }
@@ -473,6 +510,9 @@ document.addEventListener('DOMContentLoaded', () => {
     if (currentUser) {
         updateAuthUI();
         updateProfile();
+        if (isAdmin) {
+            updateAdminUI();
+        }
     } else {
         document.getElementById('page-login').classList.add('active');
         document.getElementById('page-register').classList.remove('active');
