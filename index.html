@@ -4,33 +4,85 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Учусь.РФ — портал онлайн-курсов</title>
-    <!-- Подключение шрифта Inter -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-    <!-- ====== КОНТЕЙНЕР ПРИЛОЖЕНИЯ (без рамки телефона) ====== -->
     <div id="app" class="app-container">
-        <!-- ШАПКА С НАВИГАЦИЕЙ -->
+        <!-- ШАПКА -->
         <header class="header">
             <div class="header__logo">
                 <span class="header__logo-text">Учусь.РФ</span>
             </div>
             <nav class="header__nav" id="mainNav">
+                <button class="nav-btn active" data-page="home">Главная</button>
                 <button class="nav-btn" data-page="register">Регистрация</button>
                 <button class="nav-btn" data-page="login">Вход</button>
-                <button class="nav-btn" data-page="dashboard">Личный кабинет</button>
-                <button class="nav-btn" data-page="application">Заявка</button>
+                <button class="nav-btn" data-page="dashboard">Кабинет</button>
                 <button class="nav-btn" data-page="admin">Админ</button>
             </nav>
         </header>
 
-        <!-- ====== ОСНОВНОЙ КОНТЕНТ ====== -->
+        <!-- ОСНОВНОЙ КОНТЕНТ -->
         <main class="main-content">
+            <!-- ===== ГЛАВНАЯ СТРАНИЦА ===== -->
+            <section id="page-home" class="page active">
+                <!-- Приветственный блок -->
+                <div class="hero">
+                    <h1 class="hero__title">Запись на онлайн-курсы</h1>
+                    <p class="hero__subtitle">Повышение квалификации, переподготовка, охрана труда</p>
+                </div>
+
+                <!-- СЛАЙДЕР -->
+                <div class="slider-container hero-slider">
+                    <div class="slider" id="mainSlider">
+                        <div class="slider__track" id="sliderTrack">
+                            <!-- ВСТАВЬТЕ СВОИ ИЗОБРАЖЕНИЯ -->
+                            <div class="slider__slide"><img src="https://via.placeholder.com/800x400/0d47a1/ffffff?text=Курсы+повышения+квалификации" alt="Курсы повышения квалификации" /></div>
+                            <div class="slider__slide"><img src="https://via.placeholder.com/800x400/007bff/ffffff?text=Курсы+переподготовки" alt="Курсы переподготовки" /></div>
+                            <div class="slider__slide"><img src="https://via.placeholder.com/800x400/0d47a1/ffffff?text=Курсы+по+охране+труда" alt="Курсы по охране труда" /></div>
+                            <div class="slider__slide"><img src="https://via.placeholder.com/800x400/007bff/ffffff?text=Дистанционное+обучение" alt="Дистанционное обучение" /></div>
+                        </div>
+                        <button class="slider__btn slider__btn--prev" id="sliderPrev">‹</button>
+                        <button class="slider__btn slider__btn--next" id="sliderNext">›</button>
+                    </div>
+                    <div class="slider__dots" id="sliderDots"></div>
+                </div>
+
+                <!-- ФОРМА ОФОРМЛЕНИЯ ЗАЯВКИ НА ГЛАВНОЙ -->
+                <div class="home-application-form">
+                    <h2 class="home-application-form__title">Оформить заявку на курс</h2>
+                    <form id="homeApplicationForm" class="form">
+                        <div class="form__group">
+                            <label for="homeAppCourse">Выберите курс</label>
+                            <select id="homeAppCourse" class="form__select">
+                                <option value="Повышение квалификации">Повышение квалификации</option>
+                                <option value="Курс переподготовки">Курс переподготовки</option>
+                                <option value="Курс по охране труда">Курс по охране труда</option>
+                            </select>
+                        </div>
+                        <div class="form__group">
+                            <label for="homeAppDate">Дата начала (ДД.ММ.ГГГГ)</label>
+                            <input type="text" id="homeAppDate" placeholder="01.01.2026" />
+                        </div>
+                        <div class="form__group">
+                            <label for="homeAppPayment">Способ оплаты</label>
+                            <select id="homeAppPayment" class="form__select">
+                                <option value="Предоплата по QR-коду">Предоплата по QR-коду</option>
+                                <option value="Оплата картой МИР">Оплата картой МИР</option>
+                                <option value="Постоплата в офисе">Постоплата в офисе</option>
+                            </select>
+                        </div>
+                        <button type="submit" class="btn btn--primary btn--large">Отправить заявку</button>
+                        <p class="form__hint" id="homeAppHint"></p>
+                    </form>
+                </div>
+            </section>
+
             <!-- Страница регистрации -->
-            <section id="page-register" class="page active">
+            <section id="page-register" class="page">
                 <div class="card">
                     <h2 class="card__title">Регистрация</h2>
                     <form id="registerForm" class="form">
@@ -90,18 +142,16 @@
             <section id="page-dashboard" class="page">
                 <div class="card">
                     <h2 class="card__title">Личный кабинет</h2>
-                    <!-- СЛАЙДЕР (вставляйте свои изображения) -->
                     <div class="slider-container">
                         <div class="slider" id="dashboardSlider">
-                            <div class="slider__track" id="sliderTrack">
-                                <!-- ИЗОБРАЖЕНИЯ: замените src на свои файлы -->
-                                <div class="slider__slide"><img src="https://via.placeholder.com/200x120/0d47a1/ffffff?text=Курс+1" alt="Курс 1" /></div>
-                                <div class="slider__slide"><img src="https://via.placeholder.com/200x120/007bff/ffffff?text=Курс+2" alt="Курс 2" /></div>
-                                <div class="slider__slide"><img src="https://via.placeholder.com/200x120/0d47a1/ffffff?text=Курс+3" alt="Курс 3" /></div>
-                                <div class="slider__slide"><img src="https://via.placeholder.com/200x120/007bff/ffffff?text=Курс+4" alt="Курс 4" /></div>
+                            <div class="slider__track" id="dashboardSliderTrack">
+                                <div class="slider__slide"><img src="https://via.placeholder.com/400x150/0d47a1/ffffff?text=Ваши+курсы" alt="Ваши курсы" /></div>
+                                <div class="slider__slide"><img src="https://via.placeholder.com/400x150/007bff/ffffff?text=Обучение" alt="Обучение" /></div>
+                                <div class="slider__slide"><img src="https://via.placeholder.com/400x150/0d47a1/ffffff?text=Сертификаты" alt="Сертификаты" /></div>
+                                <div class="slider__slide"><img src="https://via.placeholder.com/400x150/007bff/ffffff?text=Поддержка" alt="Поддержка" /></div>
                             </div>
-                            <button class="slider__btn slider__btn--prev" id="sliderPrev">‹</button>
-                            <button class="slider__btn slider__btn--next" id="sliderNext">›</button>
+                            <button class="slider__btn slider__btn--prev" id="dashboardSliderPrev">‹</button>
+                            <button class="slider__btn slider__btn--next" id="dashboardSliderNext">›</button>
                         </div>
                     </div>
 
@@ -123,36 +173,6 @@
                             <textarea id="reviewText" rows="2" placeholder="Поделитесь впечатлениями..."></textarea>
                         </div>
                         <button type="submit" class="btn btn--secondary">Отправить отзыв</button>
-                    </form>
-                </div>
-            </section>
-
-            <!-- Страница оформления заявки -->
-            <section id="page-application" class="page">
-                <div class="card">
-                    <h2 class="card__title">Оформление заявки</h2>
-                    <form id="applicationForm" class="form">
-                        <div class="form__group">
-                            <label for="appCourse">Выберите курс</label>
-                            <select id="appCourse" class="form__select">
-                                <option value="Повышение квалификации">Повышение квалификации</option>
-                                <option value="Курс переподготовки">Курс переподготовки</option>
-                                <option value="Курс по охране труда">Курс по охране труда</option>
-                            </select>
-                        </div>
-                        <div class="form__group">
-                            <label for="appDate">Дата начала (ДД.ММ.ГГГГ)</label>
-                            <input type="text" id="appDate" placeholder="01.01.2026" />
-                        </div>
-                        <div class="form__group">
-                            <label for="appPayment">Способ оплаты</label>
-                            <select id="appPayment" class="form__select">
-                                <option value="Предоплата по QR-коду">Предоплата по QR-коду</option>
-                                <option value="Оплата картой МИР">Оплата картой МИР</option>
-                                <option value="Постоплата в офисе">Постоплата в офисе</option>
-                            </select>
-                        </div>
-                        <button type="submit" class="btn btn--primary">Отправить заявку</button>
                     </form>
                 </div>
             </section>
@@ -179,7 +199,6 @@
                             <button id="adminSortBtn" class="btn btn--small">Сортировка по статусу</button>
                         </div>
                         <div id="adminApplicationsList" class="admin-list"></div>
-                        <!-- пагинация -->
                         <div class="pagination">
                             <button id="adminPagePrev" class="btn btn--small">←</button>
                             <span id="adminPageInfo">1 / 1</span>
@@ -193,8 +212,6 @@
         <!-- ФУТЕР -->
         <footer class="footer">
             <div class="footer__info">
-                <p>📍 г. Москва, ул. Большая Ордынка, д. 15</p>
-                <p>📞 +7 (495) 123-45-67</p>
                 <p>© 2026 Учусь.РФ — запись на онлайн-курсы</p>
             </div>
         </footer>

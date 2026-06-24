@@ -1,26 +1,24 @@
-// script.js — полная логика приложения (без изменений)
+// script.js — обновлён с формой заявки на главной
 
 document.addEventListener('DOMContentLoaded', () => {
-
-    // ---------- ДАННЫЕ ----------
+    // Данные
     let users = JSON.parse(localStorage.getItem('users')) || [];
     let applications = JSON.parse(localStorage.getItem('applications')) || [];
     let reviews = JSON.parse(localStorage.getItem('reviews')) || [];
     let currentUser = JSON.parse(sessionStorage.getItem('currentUser')) || null;
     let isAdmin = sessionStorage.getItem('isAdmin') === 'true';
 
-    // ---------- ВСПОМОГАТЕЛЬНЫЕ ФУНКЦИИ ----------
     function saveUsers() { localStorage.setItem('users', JSON.stringify(users)); }
     function saveApps() { localStorage.setItem('applications', JSON.stringify(applications)); }
     function saveReviews() { localStorage.setItem('reviews', JSON.stringify(reviews)); }
 
-    // ---------- НАВИГАЦИЯ ----------
+    // Навигация
     const navBtns = document.querySelectorAll('.nav-btn');
     const pages = {
+        home: document.getElementById('page-home'),
         register: document.getElementById('page-register'),
         login: document.getElementById('page-login'),
         dashboard: document.getElementById('page-dashboard'),
-        application: document.getElementById('page-application'),
         admin: document.getElementById('page-admin')
     };
 
@@ -33,6 +31,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
         if (pageId === 'dashboard') renderDashboard();
         if (pageId === 'admin') renderAdminPanel();
+        window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
     navBtns.forEach(btn => {
@@ -48,7 +47,92 @@ document.addEventListener('DOMContentLoaded', () => {
         e.preventDefault(); showPage('register');
     });
 
-    // ---------- РЕГИСТРАЦИЯ ----------
+    // === СЛАЙДЕР (главный) ===
+    let mainSlideIndex = 0;
+    const mainTrack = document.getElementById('sliderTrack');
+    const mainSlides = mainTrack ? mainTrack.querySelectorAll('.slider__slide') : [];
+    const mainTotal = mainSlides.length;
+
+    function updateMainSlider() {
+        if (!mainTrack) return;
+        mainTrack.style.transform = `translateX(-${mainSlideIndex * 100}%)`;
+        updateDots();
+    }
+
+    function nextMainSlide() {
+        if (mainTotal === 0) return;
+        mainSlideIndex = (mainSlideIndex + 1) % mainTotal;
+        updateMainSlider();
+    }
+
+    function prevMainSlide() {
+        if (mainTotal === 0) return;
+        mainSlideIndex = (mainSlideIndex - 1 + mainTotal) % mainTotal;
+        updateMainSlider();
+    }
+
+    function createDots() {
+        const dotsContainer = document.getElementById('sliderDots');
+        if (!dotsContainer) return;
+        dotsContainer.innerHTML = '';
+        for (let i = 0; i < mainTotal; i++) {
+            const dot = document.createElement('button');
+            dot.className = 'slider__dot' + (i === 0 ? ' active' : '');
+            dot.dataset.index = i;
+            dot.addEventListener('click', () => {
+                mainSlideIndex = i;
+                updateMainSlider();
+            });
+            dotsContainer.appendChild(dot);
+        }
+    }
+
+    function updateDots() {
+        const dotsContainer = document.getElementById('sliderDots');
+        if (!dotsContainer) return;
+        const dots = dotsContainer.querySelectorAll('.slider__dot');
+        dots.forEach((dot, i) => {
+            dot.classList.toggle('active', i === mainSlideIndex);
+        });
+    }
+
+    if (document.getElementById('sliderNext')) {
+        document.getElementById('sliderNext').addEventListener('click', nextMainSlide);
+        document.getElementById('sliderPrev').addEventListener('click', prevMainSlide);
+        createDots();
+        setInterval(nextMainSlide, 4000);
+    }
+
+    // === СЛАЙДЕР (личный кабинет) ===
+    let dashSlideIndex = 0;
+    const dashTrack = document.getElementById('dashboardSliderTrack');
+    const dashSlides = dashTrack ? dashTrack.querySelectorAll('.slider__slide') : [];
+    const dashTotal = dashSlides.length;
+
+    function updateDashSlider() {
+        if (!dashTrack) return;
+        dashTrack.style.transform = `translateX(-${dashSlideIndex * 100}%)`;
+    }
+
+    function nextDashSlide() {
+        if (dashTotal === 0) return;
+        dashSlideIndex = (dashSlideIndex + 1) % dashTotal;
+        updateDashSlider();
+    }
+
+    function prevDashSlide() {
+        if (dashTotal === 0) return;
+        dashSlideIndex = (dashSlideIndex - 1 + dashTotal) % dashTotal;
+        updateDashSlider();
+    }
+
+    if (document.getElementById('dashboardSliderNext')) {
+        document.getElementById('dashboardSliderNext').addEventListener('click', nextDashSlide);
+        document.getElementById('dashboardSliderPrev').addEventListener('click', prevDashSlide);
+        setInterval(nextDashSlide, 3000);
+    }
+
+    // === РЕГИСТРАЦИЯ ===
     const registerForm = document.getElementById('registerForm');
     const regLoginHint = document.getElementById('regLoginHint');
     const regPasswordHint = document.getElementById('regPasswordHint');
@@ -90,7 +174,7 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('regPassword').value = '';
     });
 
-    // ---------- ВХОД ----------
+    // === ВХОД ===
     const loginForm = document.getElementById('loginForm');
     const loginHint = document.getElementById('loginHint');
 
@@ -112,7 +196,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // ---------- ЛИЧНЫЙ КАБИНЕТ + СЛАЙДЕР ----------
+    // === ЛИЧНЫЙ КАБИНЕТ ===
     function renderDashboard() {
         if (!currentUser) {
             document.querySelector('#page-dashboard .card').innerHTML = `
@@ -142,36 +226,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // Слайдер
-    let slideIndex = 0;
-    const track = document.getElementById('sliderTrack');
-    const slides = track ? track.querySelectorAll('.slider__slide') : [];
-    const totalSlides = slides.length;
-
-    function updateSlider() {
-        if (!track) return;
-        track.style.transform = `translateX(-${slideIndex * 100}%)`;
-    }
-
-    function nextSlide() {
-        if (totalSlides === 0) return;
-        slideIndex = (slideIndex + 1) % totalSlides;
-        updateSlider();
-    }
-
-    function prevSlide() {
-        if (totalSlides === 0) return;
-        slideIndex = (slideIndex - 1 + totalSlides) % totalSlides;
-        updateSlider();
-    }
-
-    if (document.getElementById('sliderNext')) {
-        document.getElementById('sliderNext').addEventListener('click', nextSlide);
-        document.getElementById('sliderPrev').addEventListener('click', prevSlide);
-        setInterval(nextSlide, 3000);
-    }
-
-    // Отзывы
+    // === ОТЗЫВЫ ===
     document.getElementById('reviewForm').addEventListener('submit', (e) => {
         e.preventDefault();
         if (!currentUser) { alert('Войдите в систему'); return; }
@@ -191,16 +246,26 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('reviewText').value = '';
     });
 
-    // ---------- ЗАЯВКА ----------
-    document.getElementById('applicationForm').addEventListener('submit', (e) => {
+    // === ФОРМА ЗАЯВКИ НА ГЛАВНОЙ ===
+    document.getElementById('homeApplicationForm').addEventListener('submit', (e) => {
         e.preventDefault();
-        if (!currentUser) { alert('Пожалуйста, войдите в систему.'); return; }
-        const course = document.getElementById('appCourse').value;
-        const date = document.getElementById('appDate').value.trim();
-        const payment = document.getElementById('appPayment').value;
+        if (!currentUser) {
+            document.getElementById('homeAppHint').textContent = '⚠️ Пожалуйста, войдите в систему.';
+            return;
+        }
+        const course = document.getElementById('homeAppCourse').value;
+        const date = document.getElementById('homeAppDate').value.trim();
+        const payment = document.getElementById('homeAppPayment').value;
+        const hint = document.getElementById('homeAppHint');
 
-        if (!date) { alert('Укажите дату в формате ДД.ММ.ГГГГ'); return; }
-        if (!/^\d{2}\.\d{2}\.\d{4}$/.test(date)) { alert('Формат даты: ДД.ММ.ГГГГ'); return; }
+        if (!date) {
+            hint.textContent = '⚠️ Укажите дату в формате ДД.ММ.ГГГГ';
+            return;
+        }
+        if (!/^\d{2}\.\d{2}\.\d{4}$/.test(date)) {
+            hint.textContent = '⚠️ Формат даты: ДД.ММ.ГГГГ';
+            return;
+        }
 
         applications.push({
             userLogin: currentUser.login,
@@ -210,13 +275,12 @@ document.addEventListener('DOMContentLoaded', () => {
             status: 'Новая'
         });
         saveApps();
-        alert('Заявка отправлена на согласование администратору.');
-        document.getElementById('appDate').value = '';
-        showPage('dashboard');
-        renderDashboard();
+        hint.textContent = '';
+        alert('✅ Заявка успешно отправлена на согласование администратору!');
+        document.getElementById('homeAppDate').value = '';
     });
 
-    // ---------- АДМИНИСТРАТОР ----------
+    // === АДМИНИСТРАТОР ===
     const adminLoginForm = document.getElementById('adminLoginForm');
     const adminStatus = document.getElementById('adminStatus');
     const adminPanel = document.getElementById('adminPanel');
@@ -247,14 +311,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const sortBtn = document.getElementById('adminSortBtn');
         let sortAsc = true;
-        sortBtn.addEventListener('click', () => {
+        sortBtn.onclick = () => {
             filtered.sort((a, b) => {
                 const order = sortAsc ? 1 : -1;
                 sortAsc = !sortAsc;
                 return a.status.localeCompare(b.status) * order;
             });
             renderAdminList(filtered);
-        });
+        };
 
         function renderAdminList(list) {
             const container = document.getElementById('adminApplicationsList');
@@ -265,7 +329,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (pageItems.length === 0) {
                 container.innerHTML = '<p>Нет заявок.</p>';
             } else {
-                container.innerHTML = pageItems.map((app, idx) => {
+                container.innerHTML = pageItems.map((app) => {
                     const globalIdx = applications.indexOf(app);
                     return `<div class="admin-item">
                         <span><strong>${app.course}</strong> ${app.date} (${app.userLogin})</span>
@@ -316,11 +380,8 @@ document.addEventListener('DOMContentLoaded', () => {
         renderAdminPanel();
     }
 
-    showPage('register');
-    if (currentUser) {
-        showPage('dashboard');
-        renderDashboard();
-    }
+    // Стартовая страница — ГЛАВНАЯ
+    showPage('home');
 
     window.showPage = showPage;
 });
