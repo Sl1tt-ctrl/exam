@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Учусь.РФ — портал онлайн-курсов</title>
+    <!-- Подключение шрифта Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+    <!-- ====== КОНТЕЙНЕР ПРИЛОЖЕНИЯ (без рамки телефона) ====== -->
+    <div id="app" class="app-container">
+        <!-- ШАПКА С НАВИГАЦИЕЙ -->
+        <header class="header">
+            <div class="header__logo">
+                <span class="header__logo-text">Учусь.РФ</span>
+            </div>
+            <nav class="header__nav" id="mainNav">
+                <button class="nav-btn" data-page="register">Регистрация</button>
+                <button class="nav-btn" data-page="login">Вход</button>
+                <button class="nav-btn" data-page="dashboard">Личный кабинет</button>
+                <button class="nav-btn" data-page="application">Заявка</button>
+                <button class="nav-btn" data-page="admin">Админ</button>
+            </nav>
+        </header>
+
+        <!-- ====== ОСНОВНОЙ КОНТЕНТ ====== -->
+        <main class="main-content">
+            <!-- Страница регистрации -->
+            <section id="page-register" class="page active">
+                <div class="card">
+                    <h2 class="card__title">Регистрация</h2>
+                    <form id="registerForm" class="form">
+                        <div class="form__group">
+                            <label for="regLogin">Логин (лат., цифры, мин. 6)</label>
+                            <input type="text" id="regLogin" placeholder="например: user2026" />
+                            <span class="form__hint" id="regLoginHint"></span>
+                        </div>
+                        <div class="form__group">
+                            <label for="regPassword">Пароль (мин. 8 символов)</label>
+                            <input type="password" id="regPassword" placeholder="••••••••" />
+                            <span class="form__hint" id="regPasswordHint"></span>
+                        </div>
+                        <div class="form__group">
+                            <label for="regFullname">ФИО</label>
+                            <input type="text" id="regFullname" placeholder="Иванов Иван Иванович" />
+                        </div>
+                        <div class="form__group">
+                            <label for="regPhone">Контактный телефон</label>
+                            <input type="tel" id="regPhone" placeholder="+7 (999) 123-45-67" />
+                        </div>
+                        <div class="form__group">
+                            <label for="regEmail">E-mail</label>
+                            <input type="email" id="regEmail" placeholder="user@example.ru" />
+                        </div>
+                        <button type="submit" class="btn btn--primary">Зарегистрироваться</button>
+                    </form>
+                    <p class="form__switch">
+                        Уже есть аккаунт? <a href="#" id="gotoLoginFromRegister">Войти</a>
+                    </p>
+                </div>
+            </section>
+
+            <!-- Страница входа -->
+            <section id="page-login" class="page">
+                <div class="card">
+                    <h2 class="card__title">Вход в систему</h2>
+                    <form id="loginForm" class="form">
+                        <div class="form__group">
+                            <label for="loginUsername">Логин</label>
+                            <input type="text" id="loginUsername" placeholder="Введите логин" />
+                            <span class="form__hint" id="loginHint"></span>
+                        </div>
+                        <div class="form__group">
+                            <label for="loginPassword">Пароль</label>
+                            <input type="password" id="loginPassword" placeholder="Введите пароль" />
+                        </div>
+                        <button type="submit" class="btn btn--primary">Войти</button>
+                    </form>
+                    <p class="form__switch">
+                        Еще не зарегистрированы? <a href="#" id="gotoRegisterFromLogin">Регистрация</a>
+                    </p>
+                </div>
+            </section>
+
+            <!-- Личный кабинет -->
+            <section id="page-dashboard" class="page">
+                <div class="card">
+                    <h2 class="card__title">Личный кабинет</h2>
+                    <!-- СЛАЙДЕР (вставляйте свои изображения) -->
+                    <div class="slider-container">
+                        <div class="slider" id="dashboardSlider">
+                            <div class="slider__track" id="sliderTrack">
+                                <!-- ИЗОБРАЖЕНИЯ: замените src на свои файлы -->
+                                <div class="slider__slide"><img src="https://via.placeholder.com/200x120/0d47a1/ffffff?text=Курс+1" alt="Курс 1" /></div>
+                                <div class="slider__slide"><img src="https://via.placeholder.com/200x120/007bff/ffffff?text=Курс+2" alt="Курс 2" /></div>
+                                <div class="slider__slide"><img src="https://via.placeholder.com/200x120/0d47a1/ffffff?text=Курс+3" alt="Курс 3" /></div>
+                                <div class="slider__slide"><img src="https://via.placeholder.com/200x120/007bff/ffffff?text=Курс+4" alt="Курс 4" /></div>
+                            </div>
+                            <button class="slider__btn slider__btn--prev" id="sliderPrev">‹</button>
+                            <button class="slider__btn slider__btn--next" id="sliderNext">›</button>
+                        </div>
+                    </div>
+
+                    <h3>История заявок</h3>
+                    <div id="applicationsHistory" class="history-list">
+                        <p class="history-empty">У вас пока нет заявок.</p>
+                    </div>
+
+                    <h3>Оставить отзыв</h3>
+                    <form id="reviewForm" class="form">
+                        <div class="form__group">
+                            <label for="reviewSelect">Выберите завершённую заявку</label>
+                            <select id="reviewSelect" class="form__select">
+                                <option value="">— нет завершённых —</option>
+                            </select>
+                        </div>
+                        <div class="form__group">
+                            <label for="reviewText">Ваш отзыв</label>
+                            <textarea id="reviewText" rows="2" placeholder="Поделитесь впечатлениями..."></textarea>
+                        </div>
+                        <button type="submit" class="btn btn--secondary">Отправить отзыв</button>
+                    </form>
+                </div>
+            </section>
+
+            <!-- Страница оформления заявки -->
+            <section id="page-application" class="page">
+                <div class="card">
+                    <h2 class="card__title">Оформление заявки</h2>
+                    <form id="applicationForm" class="form">
+                        <div class="form__group">
+                            <label for="appCourse">Выберите курс</label>
+                            <select id="appCourse" class="form__select">
+                                <option value="Повышение квалификации">Повышение квалификации</option>
+                                <option value="Курс переподготовки">Курс переподготовки</option>
+                                <option value="Курс по охране труда">Курс по охране труда</option>
+                            </select>
+                        </div>
+                        <div class="form__group">
+                            <label for="appDate">Дата начала (ДД.ММ.ГГГГ)</label>
+                            <input type="text" id="appDate" placeholder="01.01.2026" />
+                        </div>
+                        <div class="form__group">
+                            <label for="appPayment">Способ оплаты</label>
+                            <select id="appPayment" class="form__select">
+                                <option value="Предоплата по QR-коду">Предоплата по QR-коду</option>
+                                <option value="Оплата картой МИР">Оплата картой МИР</option>
+                                <option value="Постоплата в офисе">Постоплата в офисе</option>
+                            </select>
+                        </div>
+                        <button type="submit" class="btn btn--primary">Отправить заявку</button>
+                    </form>
+                </div>
+            </section>
+
+            <!-- Панель администратора -->
+            <section id="page-admin" class="page">
+                <div class="card">
+                    <h2 class="card__title">Панель администратора</h2>
+                    <p class="admin-login-status" id="adminStatus">Вход не выполнен</p>
+                    <form id="adminLoginForm" class="form form--inline">
+                        <div class="form__group">
+                            <label for="adminUser">Логин</label>
+                            <input type="text" id="adminUser" placeholder="Admin26" />
+                        </div>
+                        <div class="form__group">
+                            <label for="adminPass">Пароль</label>
+                            <input type="password" id="adminPass" placeholder="Demo20" />
+                        </div>
+                        <button type="submit" class="btn btn--primary">Войти как админ</button>
+                    </form>
+                    <div id="adminPanel" style="display: none;">
+                        <div class="admin-controls">
+                            <input type="text" id="adminFilter" placeholder="Фильтр по курсу" class="form__input" />
+                            <button id="adminSortBtn" class="btn btn--small">Сортировка по статусу</button>
+                        </div>
+                        <div id="adminApplicationsList" class="admin-list"></div>
+                        <!-- пагинация -->
+                        <div class="pagination">
+                            <button id="adminPagePrev" class="btn btn--small">←</button>
+                            <span id="adminPageInfo">1 / 1</span>
+                            <button id="adminPageNext" class="btn btn--small">→</button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <!-- ФУТЕР -->
+        <footer class="footer">
+            <div class="footer__info">
+                <p>📍 г. Москва, ул. Большая Ордынка, д. 15</p>
+                <p>📞 +7 (495) 123-45-67</p>
+                <p>© 2026 Учусь.РФ — запись на онлайн-курсы</p>
+            </div>
+        </footer>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
