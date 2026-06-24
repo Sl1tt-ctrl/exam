@@ -1,14 +1,12 @@
-// script.js — с выходом из админ-панели
+// script.js — все эмоджи удалены
 
 document.addEventListener('DOMContentLoaded', () => {
-    // Данные
     let users = JSON.parse(localStorage.getItem('users')) || [];
     let applications = JSON.parse(localStorage.getItem('applications')) || [];
     let reviews = JSON.parse(localStorage.getItem('reviews')) || [];
     let currentUser = JSON.parse(sessionStorage.getItem('currentUser')) || null;
     let isAdmin = sessionStorage.getItem('isAdmin') === 'true';
 
-    // === СОЗДАНИЕ ТЕСТОВОГО АККАУНТА ===
     if (!users.find(u => u.login === 'testuser')) {
         users.push({
             login: 'testuser',
@@ -24,14 +22,12 @@ document.addEventListener('DOMContentLoaded', () => {
     function saveApps() { localStorage.setItem('applications', JSON.stringify(applications)); }
     function saveReviews() { localStorage.setItem('reviews', JSON.stringify(reviews)); }
 
-    // === ЭЛЕМЕНТЫ ===
     const header = document.getElementById('mainHeader');
     const burgerBtn = document.getElementById('burgerBtn');
     const mainNav = document.getElementById('mainNav');
     const logoutBtn = document.getElementById('logoutBtn');
     const adminLogoutBtn = document.getElementById('adminLogoutBtn');
 
-    // === УПРАВЛЕНИЕ ДОСТУПОМ ===
     function updateAuthUI() {
         if (currentUser) {
             header.style.display = 'flex';
@@ -57,7 +53,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // === ОБНОВЛЕНИЕ ПРОФИЛЯ В ЛИЧНОМ КАБИНЕТЕ ===
     function updateProfile() {
         if (!currentUser) return;
         const initials = currentUser.fullname
@@ -72,13 +67,12 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('profilePhone').textContent = currentUser.phone || '+7 (999) 123-45-67';
     }
 
-    // === УПРАВЛЕНИЕ АДМИН-ИНТЕРФЕЙСОМ ===
     function updateAdminUI() {
         const adminStatus = document.getElementById('adminStatus');
         const adminPanel = document.getElementById('adminPanel');
         const adminLoginForm = document.getElementById('adminLoginForm');
         if (isAdmin) {
-            adminStatus.textContent = '✅ Администратор вошёл';
+            adminStatus.textContent = 'Администратор вошёл';
             adminPanel.style.display = 'block';
             adminLoginForm.style.display = 'none';
             adminLogoutBtn.style.display = 'inline-block';
@@ -91,7 +85,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // === ВЫХОД ИЗ АДМИН-ПАНЕЛИ ===
     adminLogoutBtn.addEventListener('click', () => {
         isAdmin = false;
         sessionStorage.removeItem('isAdmin');
@@ -99,7 +92,6 @@ document.addEventListener('DOMContentLoaded', () => {
         alert('Вы вышли из админ-панели');
     });
 
-    // === БУРГЕР-МЕНЮ ===
     burgerBtn.addEventListener('click', () => {
         burgerBtn.classList.toggle('active');
         mainNav.classList.toggle('open');
@@ -119,15 +111,13 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // === ОБНОВЛЕНИЕ ПРИВЕТСТВИЯ ===
     function updateGreeting() {
         const greetingText = document.getElementById('greetingText');
         if (currentUser) {
-            greetingText.textContent = `👋 Добро пожаловать, ${currentUser.fullname}!`;
+            greetingText.textContent = 'Добро пожаловать, ' + currentUser.fullname + '!';
         }
     }
 
-    // === НАВИГАЦИЯ ===
     const navBtns = document.querySelectorAll('.nav-btn:not(.nav-btn--logout)');
     const pages = {
         home: document.getElementById('page-home'),
@@ -161,7 +151,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    // === ВЫХОД ===
     logoutBtn.addEventListener('click', () => {
         currentUser = null;
         isAdmin = false;
@@ -174,7 +163,6 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('loginPassword').value = 'test12345';
     });
 
-    // === ПЕРЕКЛЮЧЕНИЕ МЕЖДУ ВХОДОМ И РЕГИСТРАЦИЕЙ ===
     document.getElementById('gotoRegister').addEventListener('click', (e) => {
         e.preventDefault();
         if (!currentUser) {
@@ -190,7 +178,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // === СЛАЙДЕР ===
     let mainSlideIndex = 0;
     const mainTrack = document.getElementById('sliderTrack');
     const mainSlides = mainTrack ? mainTrack.querySelectorAll('.slider__slide') : [];
@@ -198,7 +185,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function updateMainSlider() {
         if (!mainTrack) return;
-        mainTrack.style.transform = `translateX(-${mainSlideIndex * 100}%)`;
+        mainTrack.style.transform = 'translateX(-' + (mainSlideIndex * 100) + '%)';
         updateDots();
     }
 
@@ -246,7 +233,6 @@ document.addEventListener('DOMContentLoaded', () => {
         setInterval(nextMainSlide, 4000);
     }
 
-    // === РЕГИСТРАЦИЯ ===
     const registerForm = document.getElementById('registerForm');
     const regLoginHint = document.getElementById('regLoginHint');
     const regPasswordHint = document.getElementById('regPasswordHint');
@@ -292,7 +278,6 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('regEmail').value = '';
     });
 
-    // === ВХОД ===
     const loginForm = document.getElementById('loginForm');
     const loginHint = document.getElementById('loginHint');
 
@@ -314,7 +299,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // === ЛИЧНЫЙ КАБИНЕТ ===
     function renderDashboard() {
         const container = document.getElementById('dashboardContent');
         if (!currentUser) return;
@@ -326,32 +310,32 @@ document.addEventListener('DOMContentLoaded', () => {
         } else {
             historyHtml += '<div class="history-list">';
             historyHtml += userApps.map(a =>
-                `<div class="history-item"><span>${a.course}</span><span>${a.date} | ${a.status}</span></div>`
+                '<div class="history-item"><span>' + a.course + '</span><span>' + a.date + ' | ' + a.status + '</span></div>'
             ).join('');
             historyHtml += '</div>';
         }
 
         const completedApps = userApps.filter(a => a.status === 'Обучение завершено');
         let reviewHtml = '<h3>Оставить отзыв</h3>';
-        reviewHtml += `<form id="reviewForm" class="form">
-            <div class="form__group">
-                <label for="reviewSelect">Выберите завершённую заявку</label>
-                <select id="reviewSelect" class="form__select">`;
+        reviewHtml += '<form id="reviewForm" class="form">' +
+            '<div class="form__group">' +
+                '<label for="reviewSelect">Выберите завершённую заявку</label>' +
+                '<select id="reviewSelect" class="form__select">';
         if (completedApps.length === 0) {
             reviewHtml += '<option value="">— нет завершённых —</option>';
         } else {
             completedApps.forEach((a, idx) => {
-                reviewHtml += `<option value="${idx}">${a.course} (${a.date})</option>`;
+                reviewHtml += '<option value="' + idx + '">' + a.course + ' (' + a.date + ')</option>';
             });
         }
-        reviewHtml += `</select>
-            </div>
-            <div class="form__group">
-                <label for="reviewText">Ваш отзыв</label>
-                <textarea id="reviewText" rows="2" placeholder="Поделитесь впечатлениями..."></textarea>
-            </div>
-            <button type="submit" class="btn btn--secondary">Отправить отзыв</button>
-        </form>`;
+        reviewHtml += '</select>' +
+            '</div>' +
+            '<div class="form__group">' +
+                '<label for="reviewText">Ваш отзыв</label>' +
+                '<textarea id="reviewText" rows="2" placeholder="Поделитесь впечатлениями..."></textarea>' +
+            '</div>' +
+            '<button type="submit" class="btn btn--secondary">Отправить отзыв</button>' +
+        '</form>';
 
         container.innerHTML = historyHtml + reviewHtml;
 
@@ -375,11 +359,10 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // === ФОРМА ЗАЯВКИ НА ГЛАВНОЙ ===
     document.getElementById('homeApplicationForm').addEventListener('submit', (e) => {
         e.preventDefault();
         if (!currentUser) {
-            document.getElementById('homeAppHint').textContent = '⚠️ Пожалуйста, войдите в систему.';
+            document.getElementById('homeAppHint').textContent = 'Пожалуйста, войдите в систему.';
             return;
         }
         const course = document.getElementById('homeAppCourse').value;
@@ -388,11 +371,11 @@ document.addEventListener('DOMContentLoaded', () => {
         const hint = document.getElementById('homeAppHint');
 
         if (!date) {
-            hint.textContent = '⚠️ Укажите дату в формате ДД.ММ.ГГГГ';
+            hint.textContent = 'Укажите дату в формате ДД.ММ.ГГГГ';
             return;
         }
         if (!/^\d{2}\.\d{2}\.\d{4}$/.test(date)) {
-            hint.textContent = '⚠️ Формат даты: ДД.ММ.ГГГГ';
+            hint.textContent = 'Формат даты: ДД.ММ.ГГГГ';
             return;
         }
 
@@ -405,11 +388,10 @@ document.addEventListener('DOMContentLoaded', () => {
         });
         saveApps();
         hint.textContent = '';
-        alert('✅ Заявка успешно отправлена на согласование администратору!');
+        alert('Заявка успешно отправлена на согласование администратору!');
         document.getElementById('homeAppDate').value = '';
     });
 
-    // === АДМИНИСТРАТОР ===
     const adminLoginForm = document.getElementById('adminLoginForm');
     const adminStatus = document.getElementById('adminStatus');
     const adminPanel = document.getElementById('adminPanel');
@@ -426,9 +408,9 @@ document.addEventListener('DOMContentLoaded', () => {
             isAdmin = true;
             sessionStorage.setItem('isAdmin', 'true');
             updateAdminUI();
-            alert('✅ Вы вошли в админ-панель');
+            alert('Вы вошли в админ-панель');
         } else {
-            adminStatus.textContent = '❌ Неверный логин или пароль админа.';
+            adminStatus.textContent = 'Неверный логин или пароль админа.';
         }
     });
 
@@ -463,14 +445,14 @@ document.addEventListener('DOMContentLoaded', () => {
             } else {
                 container.innerHTML = pageItems.map((app) => {
                     const globalIdx = applications.indexOf(app);
-                    return `<div class="admin-item">
-                        <span><strong>${app.course}</strong> ${app.date} (${app.userLogin})</span>
-                        <select data-idx="${globalIdx}" class="admin-status-select">
-                            <option value="Новая" ${app.status === 'Новая' ? 'selected' : ''}>Новая</option>
-                            <option value="Идет обучение" ${app.status === 'Идет обучение' ? 'selected' : ''}>Идет обучение</option>
-                            <option value="Обучение завершено" ${app.status === 'Обучение завершено' ? 'selected' : ''}>Обучение завершено</option>
-                        </select>
-                    </div>`;
+                    return '<div class="admin-item">' +
+                        '<span><strong>' + app.course + '</strong> ' + app.date + ' (' + app.userLogin + ')</span>' +
+                        '<select data-idx="' + globalIdx + '" class="admin-status-select">' +
+                            '<option value="Новая" ' + (app.status === 'Новая' ? 'selected' : '') + '>Новая</option>' +
+                            '<option value="Идет обучение" ' + (app.status === 'Идет обучение' ? 'selected' : '') + '>Идет обучение</option>' +
+                            '<option value="Обучение завершено" ' + (app.status === 'Обучение завершено' ? 'selected' : '') + '>Обучение завершено</option>' +
+                        '</select>' +
+                    '</div>';
                 }).join('');
 
                 document.querySelectorAll('.admin-status-select').forEach(sel => {
@@ -485,7 +467,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
 
             const totalPages = Math.ceil(list.length / itemsPerPage) || 1;
-            document.getElementById('adminPageInfo').textContent = `${adminPage} / ${totalPages}`;
+            document.getElementById('adminPageInfo').textContent = adminPage + ' / ' + totalPages;
             document.getElementById('adminPagePrev').disabled = adminPage === 1;
             document.getElementById('adminPageNext').disabled = adminPage === totalPages;
         }
@@ -506,7 +488,6 @@ document.addEventListener('DOMContentLoaded', () => {
         renderAdminList(filtered);
     }
 
-    // === ИНИЦИАЛИЗАЦИЯ ===
     if (currentUser) {
         updateAuthUI();
         updateProfile();

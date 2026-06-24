@@ -40,7 +40,7 @@
                         <h1 class="login-card__title">Учусь.РФ</h1>
                         <p class="login-card__subtitle">Вход в систему</p>
                         <div class="test-account-badge">
-                            <span>🔑 Тестовый аккаунт: <strong>testuser</strong> / <strong>test12345</strong></span>
+                            <span>Тестовый аккаунт: <strong>testuser</strong> / <strong>test12345</strong></span>
                         </div>
                         <form id="loginForm" class="form">
                             <div class="form__group">
@@ -73,7 +73,7 @@
                         </div>
                         <div class="form__group">
                             <label for="regPassword">Пароль (мин. 8 символов)</label>
-                            <input type="password" id="regPassword" placeholder="••••••••" />
+                            <input type="password" id="regPassword" placeholder="********" />
                             <span class="form__hint" id="regPasswordHint"></span>
                         </div>
                         <div class="form__group">
@@ -106,11 +106,30 @@
                     </div>
                 </div>
 
+                <!-- СТАТИСТИКА -->
+                <div class="stats-grid">
+                    <div class="stat-item">
+                        <div class="stat-number">500+</div>
+                        <div class="stat-label">Выпускников</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number">98%</div>
+                        <div class="stat-label">Довольных студентов</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number">15+</div>
+                        <div class="stat-label">Лет опыта</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number">20+</div>
+                        <div class="stat-label">Направлений обучения</div>
+                    </div>
+                </div>
+
                 <!-- СЛАЙДЕР -->
                 <div class="slider-container hero-slider">
                     <div class="slider" id="mainSlider">
                         <div class="slider__track" id="sliderTrack">
-                            <!-- ВСТАВЬТЕ СВОИ ИЗОБРАЖЕНИЯ -->
                             <div class="slider__slide"><img src="https://via.placeholder.com/800x400/0d47a1/ffffff?text=Курсы+повышения+квалификации" alt="Курсы повышения квалификации" /></div>
                             <div class="slider__slide"><img src="https://via.placeholder.com/800x400/007bff/ffffff?text=Курсы+переподготовки" alt="Курсы переподготовки" /></div>
                             <div class="slider__slide"><img src="https://via.placeholder.com/800x400/0d47a1/ffffff?text=Курсы+по+охране+труда" alt="Курсы по охране труда" /></div>
@@ -122,19 +141,74 @@
                     <div class="slider__dots" id="sliderDots"></div>
                 </div>
 
+                <!-- ПРЕИМУЩЕСТВА -->
+                <div class="advantages">
+                    <h2 class="advantages__title">Почему выбирают нас</h2>
+                    <div class="advantages-grid">
+                        <div class="advantage-card">
+                            <div class="advantage-icon">●</div>
+                            <h3>Опытные преподаватели</h3>
+                            <p>Преподаватели с многолетним стажем и практическим опытом</p>
+                        </div>
+                        <div class="advantage-card">
+                            <div class="advantage-icon">●</div>
+                            <h3>Актуальные программы</h3>
+                            <p>Программы обновляются с учетом требований рынка труда</p>
+                        </div>
+                        <div class="advantage-card">
+                            <div class="advantage-icon">●</div>
+                            <h3>Дистанционное обучение</h3>
+                            <p>Учитесь из любой точки мира в удобное для вас время</p>
+                        </div>
+                        <div class="advantage-card">
+                            <div class="advantage-icon">●</div>
+                            <h3>Государственный диплом</h3>
+                            <p>По окончании выдается диплом установленного образца</p>
+                        </div>
+                    </div>
+                </div>
+
                 <!-- Карточки с курсами -->
                 <div class="course-grid">
                     <div class="course-card">
                         <h3>Повышение квалификации</h3>
                         <p>Актуализация знаний и навыков по вашей специальности</p>
+                        <div class="course-badge">72 часа</div>
                     </div>
                     <div class="course-card">
                         <h3>Курс переподготовки</h3>
                         <p>Получение новой профессии с выдачей диплома</p>
+                        <div class="course-badge">250+ часов</div>
                     </div>
                     <div class="course-card">
                         <h3>Курс по охране труда</h3>
                         <p>Обучение требованиям безопасности на производстве</p>
+                        <div class="course-badge">40 часов</div>
+                    </div>
+                </div>
+
+                <!-- ОТЗЫВЫ -->
+                <div class="reviews-section">
+                    <h2 class="reviews-section__title">Отзывы наших студентов</h2>
+                    <div class="reviews-grid">
+                        <div class="review-card">
+                            <div class="review-rating">★★★★★</div>
+                            <p class="review-text">"Отличные курсы! Преподаватели доступно объясняют материал. Получил новые знания и повысил квалификацию."</p>
+                            <div class="review-author">Анна Смирнова</div>
+                            <div class="review-course">Повышение квалификации</div>
+                        </div>
+                        <div class="review-card">
+                            <div class="review-rating">★★★★★</div>
+                            <p class="review-text">"Прошел курс переподготовки. Очень доволен результатом. Программа насыщенная, но структурированная."</p>
+                            <div class="review-author">Дмитрий Иванов</div>
+                            <div class="review-course">Курс переподготовки</div>
+                        </div>
+                        <div class="review-card">
+                            <div class="review-rating">★★★★★</div>
+                            <p class="review-text">"Курс по охране труда помог систематизировать знания и получить необходимые документы для работы."</p>
+                            <div class="review-author">Елена Петрова</div>
+                            <div class="review-course">Охрана труда</div>
+                        </div>
                     </div>
                 </div>
 
@@ -171,7 +245,7 @@
             <!-- Личный кабинет (доступен только после входа) -->
             <section id="page-dashboard" class="page">
                 <div class="card">
-                    <!-- БЛОК ПРОФИЛЯ С АВАТАРКОЙ (без SVG) -->
+                    <!-- БЛОК ПРОФИЛЯ С АВАТАРКОЙ -->
                     <div class="profile-header" id="profileHeader">
                         <div class="profile-avatar" id="profileAvatar">
                             <span class="profile-avatar__initials" id="avatarInitials">ТП</span>
@@ -227,9 +301,9 @@
         <!-- ФУТЕР -->
         <footer class="footer">
             <div class="footer__info">
-                <p>📍 г. Москва, ул. Большая Ордынка, д. 15</p>
-                <p>📞 +7 (495) 123-45-67</p>
-                <p>✉️ info@uchus.ru</p>
+                <p>г. Москва, ул. Большая Ордынка, д. 15</p>
+                <p>+7 (495) 123-45-67</p>
+                <p>info@uchus.ru</p>
                 <p class="footer__copy">© 2026 Учусь.РФ — запись на онлайн-курсы</p>
             </div>
         </footer>
