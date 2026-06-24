@@ -1,4 +1,4 @@
-// script.js — с обновлённым футером (без изменений в логике)
+// script.js — с отображением профиля в личном кабинете
 
 document.addEventListener('DOMContentLoaded', () => {
     // Данные
@@ -41,6 +41,7 @@ document.addEventListener('DOMContentLoaded', () => {
             document.getElementById('page-register').classList.remove('active');
             showPage('home');
             updateGreeting();
+            updateProfile();
         } else {
             header.style.display = 'none';
             document.getElementById('page-login').classList.add('active');
@@ -52,6 +53,14 @@ document.addEventListener('DOMContentLoaded', () => {
                 btn.classList.remove('active');
             });
         }
+    }
+
+    // === ОБНОВЛЕНИЕ ПРОФИЛЯ В ЛИЧНОМ КАБИНЕТЕ ===
+    function updateProfile() {
+        if (!currentUser) return;
+        document.getElementById('profileName').textContent = currentUser.fullname || 'Имя не указано';
+        document.getElementById('profileEmail').textContent = currentUser.email || 'email@example.com';
+        document.getElementById('profilePhone').textContent = currentUser.phone || '+7 (999) 123-45-67';
     }
 
     // === БУРГЕР-МЕНЮ ===
@@ -98,7 +107,10 @@ document.addEventListener('DOMContentLoaded', () => {
         navBtns.forEach(btn => {
             btn.classList.toggle('active', btn.dataset.page === pageId);
         });
-        if (pageId === 'dashboard') renderDashboard();
+        if (pageId === 'dashboard') {
+            updateProfile();
+            renderDashboard();
+        }
         if (pageId === 'admin') renderAdminPanel();
         window.scrollTo({ top: 0, behavior: 'smooth' });
     }
@@ -258,6 +270,7 @@ document.addEventListener('DOMContentLoaded', () => {
             loginHint.textContent = '';
             alert('Добро пожаловать, ' + user.fullname);
             updateAuthUI();
+            updateProfile();
         } else {
             loginHint.textContent = 'Неверный логин или пароль.';
         }
@@ -459,6 +472,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // === ИНИЦИАЛИЗАЦИЯ ===
     if (currentUser) {
         updateAuthUI();
+        updateProfile();
     } else {
         document.getElementById('page-login').classList.add('active');
         document.getElementById('page-register').classList.remove('active');
